@@ -33,8 +33,22 @@ app
     return c.notFound()
   })
   .get('/l2d/:id', async (c) => {
-    const {id} = c.req.param()
-    
+    const { id } = c.req.param()
+    const ids = await (
+      await fetch('http://localhost:3000/data/ids.json')
+    ).json()
+    for (const iId of ids) {
+      if (iId.toString() === id) {
+        const img = await (
+          await fetch(`http://localhost:3000/images/student/l2d/${id}.webp`)
+        ).arrayBuffer()
+        if (img)
+          return c.body(img, 200, {
+            'Content-Type': 'image/webp',
+          })
+      }
+    }
+    return c.notFound()
   })
 
 export default app
