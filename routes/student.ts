@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 
-const data = await fetch('http://localhost:3000/data/zh/students.json')
+const data = await fetch('http://localhost:3001/data/zh/students.json')
 const app = new Hono()
 
 app
@@ -35,12 +35,12 @@ app
   .get('/l2d/:id', async (c) => {
     const { id } = c.req.param()
     const ids = await (
-      await fetch('http://localhost:3000/data/ids.json')
+      await fetch('http://localhost:3001/data/ids.json')
     ).json()
     for (const iId of ids) {
       if (iId.toString() === id) {
         const img = await (
-          await fetch(`http://localhost:3000/images/student/l2d/${id}.webp`)
+          await fetch(`http://localhost:3001/images/student/l2d/${id}.webp`)
         ).arrayBuffer()
         if (img)
           return c.body(img, 200, {
