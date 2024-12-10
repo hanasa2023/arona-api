@@ -1,46 +1,51 @@
+import { config } from '@/config'
 import { Hono } from 'hono'
 
-const data = await fetch('http://localhost:3001/data/zh/students.json')
+const studentsData = await fetch(`${config.baseUrl}/data/zh/students.json`)
+  .then((res) => res.json())
+  .catch((err) => {
+    console.error('Failed to load students data:', err)
+    return null
+  })
 const app = new Hono()
 
 app
   .get('/', async (c) => {
-    if (data) {
-      const students = await data.json()
-      return c.json({
-        code: 200,
-        message: 'success',
-        data: students,
-      })
+    if (!studentsData) {
+      return c.notFound()
     }
+    return c.json({
+      code: 200,
+      message: 'success',
+      data: studentsData,
+    })
     return c.notFound()
   })
   .get('/:id', async (c) => {
+    if (!studentsData) {
+      return c.notFound()
+    }
     const { id } = c.req.param()
-    if (data) {
-      const students = await data.json()
-      for (const student of students) {
-        if (student['Id'].toString() === id) {
-          return c.json({
-            code: 200,
-            message: 'success',
-            data: student,
-          })
-        }
+    for (const student of studentsData) {
+      if (student['Id'].toString() === id) {
+        return c.json({
+          code: 200,
+          message: 'success',
+          data: student,
+        })
       }
     }
-
-    return c.notFound()
   })
   .get('/l2d/:id', async (c) => {
+    if (!studentsData) {
+      return c.notFound()
+    }
     const { id } = c.req.param()
-    const ids = await (
-      await fetch('http://localhost:3001/data/ids.json')
-    ).json()
+    const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
     for (const iId of ids) {
       if (iId.toString() === id) {
         const img = await (
-          await fetch(`http://localhost:3001/images/student/l2d/${id}.webp`)
+          await fetch(`${config.baseUrl}/images/student/l2d/${id}.webp`)
         ).arrayBuffer()
         if (img)
           return c.body(img, 200, {
@@ -48,7 +53,6 @@ app
           })
       }
     }
-    return c.notFound()
   })
 
 export default app
