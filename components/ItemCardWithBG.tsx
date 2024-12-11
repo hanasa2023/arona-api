@@ -7,7 +7,6 @@ export const ItemCardWithBG = ({
   text: string
   imgBG: string
 }) => {
-  console.info(imgBG)
   return (
     <div className="flex h-8 items-center justify-center px-1 rounded-full backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20 shadow-lg">
       <div

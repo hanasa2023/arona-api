@@ -12,6 +12,6 @@ app.get('/hello', (c) => {
   })
 })
 
-app.route('/students', student)
+app.route('/student', student)
 
 export const GET = handle(app)
