@@ -1,4 +1,3 @@
-import { config } from '@/config'
 import { Hono } from 'hono'
 import fs from 'fs'
 import path from 'path'

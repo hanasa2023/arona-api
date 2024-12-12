@@ -11,12 +11,6 @@ const studentsData = JSON.parse(
   )
 )
 
-// await fetch(`${config.baseUrl}/data/zh/students.min.json`)
-//   .then((res) => res.json())
-//   .catch((err) => {
-//     console.error('Failed to load students data:', err)
-//     return null
-//   })
 const app = new Hono()
 
 app
