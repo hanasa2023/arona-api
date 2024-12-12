@@ -1,13 +1,22 @@
 import { config } from '@/config'
 import { Hono } from 'hono'
 import puppeteer from 'puppeteer'
+import fs from 'fs'
+import path from 'path'
 
-const studentsData = await fetch(`${config.baseUrl}/data/zh/students.min.json`)
-  .then((res) => res.json())
-  .catch((err) => {
-    console.error('Failed to load students data:', err)
-    return null
-  })
+const studentsData = JSON.parse(
+  fs.readFileSync(
+    path.join(process.cwd(), '/public/data/zh/students.min.json'),
+    { encoding: 'utf-8' }
+  )
+)
+
+// await fetch(`${config.baseUrl}/data/zh/students.min.json`)
+//   .then((res) => res.json())
+//   .catch((err) => {
+//     console.error('Failed to load students data:', err)
+//     return null
+//   })
 const app = new Hono()
 
 app
@@ -41,7 +50,12 @@ app
       return c.notFound()
     }
     const { id } = c.req.param()
-    const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
+    const ids = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), '/public/data/ids.json'), {
+        encoding: 'utf-8',
+      })
+    )
+    // const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
     for (const iId of ids) {
       if (iId.toString() === id) {
         const img = await (
@@ -70,6 +84,7 @@ app
       const screenshot = await card.screenshot({
         type: 'webp',
       })
+      await browser.close()
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/webp',
@@ -110,6 +125,7 @@ app
       const screenshot = await card.screenshot({
         type: 'png',
       })
+      await browser.close()
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
