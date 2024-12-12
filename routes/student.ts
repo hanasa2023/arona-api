@@ -133,7 +133,7 @@ app
       )
     }
   })
-  .get('/info/skill/:id', async (c) => {
+  .get('/skills/:id', async (c) => {
     const { id } = c.req.param()
     const url = `${config.baseUrl}/student/info/skills/${id}`
     try {
