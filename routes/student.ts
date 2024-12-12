@@ -3,6 +3,7 @@ import { Hono } from 'hono'
 import puppeteer from 'puppeteer'
 import fs from 'fs'
 import path from 'path'
+import { IBrowser } from '@/utils/borswer'
 
 const studentsData = JSON.parse(
   fs.readFileSync(
@@ -49,7 +50,6 @@ app
         encoding: 'utf-8',
       })
     )
-    // const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
     for (const iId of ids) {
       if (iId.toString() === id) {
         const img = await (
@@ -66,7 +66,7 @@ app
     const { id } = c.req.param()
     const url = `${config.baseUrl}/student/info/${id}`
     try {
-      const browser = await puppeteer.launch()
+      const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
       await page.setViewport({
         width: 1920,
@@ -78,7 +78,6 @@ app
       const screenshot = await card.screenshot({
         type: 'webp',
       })
-      await browser.close()
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/webp',
@@ -107,7 +106,7 @@ app
     }
     const url = `${config.baseUrl}/student/info/${id}/${Number(level) + 10}`
     try {
-      const browser = await puppeteer.launch()
+      const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
       await page.setViewport({
         width: 1920,
@@ -119,7 +118,6 @@ app
       const screenshot = await card.screenshot({
         type: 'png',
       })
-      await browser.close()
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
@@ -139,7 +137,7 @@ app
     const { id } = c.req.param()
     const url = `${config.baseUrl}/student/info/skills/${id}`
     try {
-      const browser = await puppeteer.launch()
+      const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
       await page.setViewport({
         width: 1920,
@@ -151,7 +149,6 @@ app
       const screenshot = await card.screenshot({
         type: 'webp',
       })
-      await browser.close()
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/webp',

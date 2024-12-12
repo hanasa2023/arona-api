@@ -138,14 +138,13 @@ export default async function Page({
         </div>
         <div className="h-1"></div>
         <div className="flex w-full rounded-md items-center justify-center p-1 backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20 shadow-lg">
-          {student.data!.Equipment.map((equipment: string) => (
-            <>
+          {student.data!.Equipment.map((equipment: string, index: number) => (
+            <div key={index} className="flex">
               <EquipmentCard
-                key={equipment}
                 src={`/images/equipment/icon/equipment_icon_${equipment.toLowerCase()}_tier1.webp`}
               />
               <div className="w-3"></div>
-            </>
+            </div>
           ))}
           <div className="w-[1px] h-16 bg-gray-500"></div>
           <div className="w-3"></div>
