@@ -14,7 +14,7 @@ export const ItemCardWithBG = ({
       >
         <img src={imgPath} className={`h-4`} />
       </div>
-      <p className="text-sm font-sans font-bold mx-2">{text}</p>
+      <p className="text-sm font-bold mx-2">{text}</p>
     </div>
   )
 }

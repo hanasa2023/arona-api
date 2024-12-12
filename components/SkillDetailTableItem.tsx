@@ -9,9 +9,9 @@ export const SkillDetailTableItem = ({
     <div className="col-span-1 py-1 px-2 text-center">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <p className="font-sans italic">{text}</p>
+          <p className="italic">{text}</p>
         </div>
-        <p className="font-sans font-bold">{value}</p>
+        <p className="font-bold">{value}</p>
       </div>
     </div>
   )

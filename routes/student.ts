@@ -60,18 +60,101 @@ app
     try {
       const browser = await puppeteer.launch()
       const page = await browser.newPage()
+      await page.setViewport({
+        width: 1920,
+        height: 1080,
+      })
       await page.goto(url, { waitUntil: 'networkidle2' })
-      const screenshotBuffer = await page.screenshot({
-        fullPage: true,
+      const card = await page.$('#info-card')
+      if (!card) throw new Error('Card element not found')
+      const screenshot = await card.screenshot({
+        type: 'webp',
+      })
+      const data = new Uint8Array(screenshot)
+      return c.body(data.buffer, 200, {
+        'Content-Type': 'image/webp',
+      })
+    } catch (e) {
+      console.error(e)
+      return c.json(
+        {
+          code: 500,
+          message: 'Internal server error',
+        },
+        500
+      )
+    }
+  })
+  .get('/info/:id/:level', async (c) => {
+    const { id, level } = c.req.param()
+    if (Number(level) > 90 || Number(level) < 1) {
+      return c.json(
+        {
+          code: 500,
+          message: 'Invalid level',
+        },
+        500
+      )
+    }
+    const url = `${config.baseUrl}/student/info/${id}/${Number(level) + 10}`
+    try {
+      const browser = await puppeteer.launch()
+      const page = await browser.newPage()
+      await page.setViewport({
+        width: 1920,
+        height: 1080,
+      })
+      await page.goto(url, { waitUntil: 'networkidle2' })
+      const card = await page.$('#info-card')
+      if (!card) throw new Error('Card element not found')
+      const screenshot = await card.screenshot({
         type: 'png',
       })
-      await browser.close()
-      const uint8Array = new Uint8Array(screenshotBuffer)
-      return c.body(uint8Array.buffer, 200, {
+      const data = new Uint8Array(screenshot)
+      return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
       })
     } catch (e) {
       console.error(e)
+      return c.json(
+        {
+          code: 500,
+          message: 'Internal server error',
+        },
+        500
+      )
+    }
+  })
+  .get('/info/skill/:id', async (c) => {
+    const { id } = c.req.param()
+    const url = `${config.baseUrl}/student/info/skills/${id}`
+    try {
+      const browser = await puppeteer.launch()
+      const page = await browser.newPage()
+      await page.setViewport({
+        width: 1920,
+        height: 1080,
+      })
+      await page.goto(url, { waitUntil: 'networkidle2' })
+      const card = await page.$('#skill-card')
+      if (!card) throw new Error('Card element not found')
+      const screenshot = await card.screenshot({
+        type: 'webp',
+      })
+      await browser.close()
+      const data = new Uint8Array(screenshot)
+      return c.body(data.buffer, 200, {
+        'Content-Type': 'image/webp',
+      })
+    } catch (e) {
+      console.error(e)
+      return c.json(
+        {
+          code: 500,
+          message: 'Internal server error',
+        },
+        500
+      )
     }
   })
 

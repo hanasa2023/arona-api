@@ -55,9 +55,9 @@ export const SkillListItem = ({
           <p className="font-bold italic">{skillType}</p>
         </div>
       </div>
-      <p className="whitespace-pre-line px-1 py-2">
+      <div className="whitespace-pre-line px-1 py-2">
         {parseStringToElements(skillDesc!)}
-      </p>
+      </div>
       <div className="flex">
         {skill.Radius && skill.Radius[0].Type == 'Circle' ? (
           <>

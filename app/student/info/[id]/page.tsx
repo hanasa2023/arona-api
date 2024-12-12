@@ -26,7 +26,10 @@ export default async function Page({
   ).json()
 
   return (
-    <div className="flex w-screen items-center justify-center px-4 bg-gradient-to-tr from-white via-gray-400 to-gray-700">
+    <div
+      id="info-card"
+      className="flex w-screen items-center justify-center px-4 bg-gradient-to-tr from-white via-gray-400 to-gray-700"
+    >
       <div className="flex w-1/2 h-full py-2 items-center justify-center">
         <img
           src={`/images/student/portrait/${id}.webp`}
@@ -34,9 +37,7 @@ export default async function Page({
         />
       </div>
       <div className="flex-row w-1/2 h-full items-center py-4">
-        <p className="text-2xl font-sans font-bold italic">
-          {student.data!.Name}
-        </p>
+        <p className="text-2xl font-bold italic">{student.data!.Name}</p>
         <div className="w-full h-3"></div>
         <div className="flex">
           <div className="inline-flex items-center px-2 rounded-full backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20 shadow-lg">
@@ -56,7 +57,7 @@ export default async function Page({
               squadTypeColor[student.data!.SquadType]
             }`}
           >
-            <p className="text-white font-sans">
+            <p className="text-white">
               {localization['SquadType'][student.data!.SquadType]}
             </p>
           </div>

@@ -12,9 +12,9 @@ export const DetailTableItem = ({
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <img src={icon} className="h-8 invert"></img>
-          <p className="font-sans">{text}</p>
+          <p>{text}</p>
         </div>
-        <p className="font-sans font-bold">{value}</p>
+        <p className="font-bold">{value}</p>
       </div>
     </div>
   )
