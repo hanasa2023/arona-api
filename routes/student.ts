@@ -1,6 +1,5 @@
 import { config } from '@/config'
 import { Hono } from 'hono'
-import puppeteer from 'puppeteer'
 import fs from 'fs'
 import path from 'path'
 import { IBrowser } from '@/utils/borswer'
@@ -68,19 +67,19 @@ app
     try {
       const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
-      await page.setViewport({
+      await page.setViewportSize({
         width: 1920,
         height: 1080,
       })
-      await page.goto(url, { waitUntil: 'networkidle2' })
+      await page.goto(url, { waitUntil: 'networkidle' })
       const card = await page.$('#info-card')
       if (!card) throw new Error('Card element not found')
       const screenshot = await card.screenshot({
-        type: 'webp',
+        type: 'png',
       })
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
-        'Content-Type': 'image/webp',
+        'Content-Type': 'image/png',
       })
     } catch (e) {
       console.error(e)
@@ -108,11 +107,11 @@ app
     try {
       const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
-      await page.setViewport({
+      await page.setViewportSize({
         width: 1920,
         height: 1080,
       })
-      await page.goto(url, { waitUntil: 'networkidle2' })
+      await page.goto(url, { waitUntil: 'networkidle' })
       const card = await page.$('#info-card')
       if (!card) throw new Error('Card element not found')
       const screenshot = await card.screenshot({
@@ -139,19 +138,19 @@ app
     try {
       const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
-      await page.setViewport({
+      await page.setViewportSize({
         width: 1920,
         height: 1080,
       })
-      await page.goto(url, { waitUntil: 'networkidle2' })
+      await page.goto(url, { waitUntil: 'networkidle' })
       const card = await page.$('#skill-card')
       if (!card) throw new Error('Card element not found')
       const screenshot = await card.screenshot({
-        type: 'webp',
+        type: 'png',
       })
       const data = new Uint8Array(screenshot)
       return c.body(data.buffer, 200, {
-        'Content-Type': 'image/webp',
+        'Content-Type': 'image/png',
       })
     } catch (e) {
       console.error(e)

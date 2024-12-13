@@ -226,7 +226,7 @@ export default async function Page({
                 )
                   return <></>
                 return (
-                  <>
+                  <div key={index}>
                     <SkillListItem
                       skill={skill}
                       skillColor={skillColor[student.data!.BulletType]}
@@ -242,7 +242,7 @@ export default async function Page({
                       <div className="h-[1px] w-full bg-gray-400"></div>
                     )}
                     <div className="h-2"></div>
-                  </>
+                  </div>
                 )
               })}
             </div>
