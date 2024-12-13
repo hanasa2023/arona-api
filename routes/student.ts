@@ -63,21 +63,28 @@ app
   })
   .get('/info/:id', async (c) => {
     const { id } = c.req.param()
-    const url = `${config.baseUrl}/student/info/${id}`
+    const imgPath = path.join(
+      process.cwd(),
+      `/public/images/student-info/${id}.png`
+    )
     try {
-      const browser = await IBrowser.launchBrowser()
-      const page = await browser.newPage()
-      await page.setViewportSize({
-        width: 1920,
-        height: 1080,
-      })
-      await page.goto(url, { waitUntil: 'networkidle' })
-      const card = await page.$('#info-card')
-      if (!card) throw new Error('Card element not found')
-      const screenshot = await card.screenshot({
-        type: 'png',
-      })
-      const data = new Uint8Array(screenshot)
+      if (!fs.existsSync(imgPath)) {
+        const url = `${config.baseUrl}/student/info/${id}`
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#info-card')
+        if (!card) throw new Error('Card element not found')
+        await card.screenshot({
+          type: 'png',
+          path: imgPath,
+        })
+      }
+      const data = new Uint8Array(fs.readFileSync(imgPath))
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
       })
@@ -103,21 +110,28 @@ app
         500
       )
     }
-    const url = `${config.baseUrl}/student/info/${id}/${Number(level) + 10}`
+    const imgPath = path.join(
+      process.cwd(),
+      `/public/images/student-info/${id}_${level}.png`
+    )
     try {
-      const browser = await IBrowser.launchBrowser()
-      const page = await browser.newPage()
-      await page.setViewportSize({
-        width: 1920,
-        height: 1080,
-      })
-      await page.goto(url, { waitUntil: 'networkidle' })
-      const card = await page.$('#info-card')
-      if (!card) throw new Error('Card element not found')
-      const screenshot = await card.screenshot({
-        type: 'png',
-      })
-      const data = new Uint8Array(screenshot)
+      if (!fs.existsSync(imgPath)) {
+        const url = `${config.baseUrl}/student/info/${id}/${Number(level) + 10}`
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#info-card')
+        if (!card) throw new Error('Card element not found')
+        await card.screenshot({
+          type: 'png',
+          path: imgPath,
+        })
+      }
+      const data = new Uint8Array(fs.readFileSync(imgPath))
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
       })
@@ -134,21 +148,28 @@ app
   })
   .get('/skills/:id', async (c) => {
     const { id } = c.req.param()
-    const url = `${config.baseUrl}/student/info/skills/${id}`
+    const imgPath = path.join(
+      process.cwd(),
+      `/public/images/student-skills/${id}.png`
+    )
     try {
-      const browser = await IBrowser.launchBrowser()
-      const page = await browser.newPage()
-      await page.setViewportSize({
-        width: 1920,
-        height: 1080,
-      })
-      await page.goto(url, { waitUntil: 'networkidle' })
-      const card = await page.$('#skill-card')
-      if (!card) throw new Error('Card element not found')
-      const screenshot = await card.screenshot({
-        type: 'png',
-      })
-      const data = new Uint8Array(screenshot)
+      if (!fs.existsSync(imgPath)) {
+        const url = `${config.baseUrl}/student/info/skills/${id}`
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#skill-card')
+        if (!card) throw new Error('Card element not found')
+        await card.screenshot({
+          type: 'png',
+          path: imgPath,
+        })
+      }
+      const data = new Uint8Array(fs.readFileSync(imgPath))
       return c.body(data.buffer, 200, {
         'Content-Type': 'image/png',
       })
