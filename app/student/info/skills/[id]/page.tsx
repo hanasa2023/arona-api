@@ -150,9 +150,7 @@ export default async function Page({
                     />
                     <div className="w-2"></div>
                   </>
-                ) : (
-                  <></>
-                )}
+                ) : null}
                 {student.data!.Skills[1].Radius &&
                 student.data!.Skills[1].Radius[0].Type === 'Obb' ? (
                   <>
@@ -162,9 +160,7 @@ export default async function Page({
                     />
                     <div className="w-2"></div>
                   </>
-                ) : (
-                  <></>
-                )}
+                ) : null}
                 {student.data!.Skills[1].Range ? (
                   <>
                     <ItemCard
@@ -173,19 +169,13 @@ export default async function Page({
                     />
                     <div className="w-2"></div>
                   </>
-                ) : (
-                  <></>
-                )}
+                ) : null}
                 {student.data!.Skills[1].Duration ? (
-                  <>
-                    <ItemCard
-                      imgPath="/images/staticon/Stat_GroggyTime.png"
-                      text={(student.data!.Skills[1].Duration! / 30).toFixed(2)}
-                    />
-                  </>
-                ) : (
-                  <></>
-                )}
+                  <ItemCard
+                    imgPath="/images/staticon/Stat_GroggyTime.png"
+                    text={(student.data!.Skills[1].Duration! / 30).toFixed(2)}
+                  />
+                ) : null}
               </div>
             </div>
             <div className="h-2"></div>
@@ -224,7 +214,7 @@ export default async function Page({
                   skill.SkillType === 'weaponpassive' ||
                   skill.SkillType === 'upgrades'
                 )
-                  return <></>
+                  return null
                 return (
                   <div key={index}>
                     <SkillListItem
@@ -236,9 +226,7 @@ export default async function Page({
                       localization={localization}
                     />
                     <div className="h-2"></div>
-                    {index === student.data!.Skills.length - 1 ? (
-                      <></>
-                    ) : (
+                    {index === student.data!.Skills.length - 1 ? null : (
                       <div className="h-[1px] w-full bg-gray-400"></div>
                     )}
                     <div className="h-2"></div>
@@ -247,9 +235,7 @@ export default async function Page({
               })}
             </div>
           </>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </div>
     </div>
   )

@@ -27,15 +27,16 @@ export const SkillListItem = ({
         const match = part.match(/<b:(\w+)>/)
         const src = match ? `/images/buff/Buff_${match[1]}.webp` : ''
         return (
-          <div className="inline-flex px-2 items-center justify-center rounded-full bg-red-200">
-            <img key={index} src={src} className="h-6 " alt={src} />
+          <div
+            key={index}
+            className="inline-flex px-2 items-center justify-center rounded-full bg-red-200"
+          >
+            <img src={src} className="h-6 " alt={src} />
             {match ? (
               <p className="text-red-800">
                 {localization['BuffName'][`Buff_${match[1]}`]}
               </p>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </div>
         )
       }
@@ -67,9 +68,7 @@ export const SkillListItem = ({
             />
             <div className="w-2"></div>
           </>
-        ) : (
-          <></>
-        )}
+        ) : null}
         {skill.Radius && skill.Radius[0].Type == 'Obb' ? (
           <>
             <ItemCard
@@ -78,9 +77,7 @@ export const SkillListItem = ({
             />
             <div className="w-2"></div>
           </>
-        ) : (
-          <></>
-        )}
+        ) : null}
         {skill.Range ? (
           <>
             <ItemCard
@@ -89,19 +86,13 @@ export const SkillListItem = ({
             />
             <div className="w-2"></div>
           </>
-        ) : (
-          <></>
-        )}
+        ) : null}
         {skill.Duration ? (
-          <>
-            <ItemCard
-              imgPath="/images/staticon/Stat_GroggyTime.png"
-              text={(skill.Duration! / 30).toFixed(2)}
-            />
-          </>
-        ) : (
-          <></>
-        )}
+          <ItemCard
+            imgPath="/images/staticon/Stat_GroggyTime.png"
+            text={(skill.Duration! / 30).toFixed(2)}
+          />
+        ) : null}
       </div>
     </>
   )
