@@ -2,6 +2,7 @@ import { config } from '@/config'
 import { Hono } from 'hono'
 import { IBrowser } from '@/utils/borswer'
 import { IOSS } from '@/utils/oss'
+import { createHash } from 'crypto'
 
 const studentsData = await (
   await fetch(`${config.baseUrl}/data/zh/students.min.json`)
@@ -40,18 +41,32 @@ app
       return c.notFound()
     }
     const { id } = c.req.param()
-    const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
-    for (const iId of ids) {
-      if (iId.toString() === id) {
-        return c.json({
-          code: 200,
-          message: 'success',
-          data: {
-            imgPath: `${config.baseUrl}/images/student/l2d/${id}.webp`,
-          },
-        })
-      }
+    const imgPath = `/images/student/l2d/${id}.webp`
+    const isImgExist = await IOSS.isObjectExist(imgPath)
+    const head = (await IOSS.getClient().head(imgPath)) as {
+      res: { headers: { date: string } }
     }
+    const hash = createHash('sha256')
+      .update(head.res.headers['date'])
+      .digest('hex')
+    if (isImgExist) {
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgPath: `${config.baseUrl}${imgPath}`,
+          hash,
+        },
+      })
+    }
+    return c.json(
+      {
+        code: 500,
+        message: 'Invalid id',
+        data: {},
+      },
+      500
+    )
   })
   .get('/info/:id', async (c) => {
     const { id } = c.req.param()
