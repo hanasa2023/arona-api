@@ -2,6 +2,7 @@ import { SkillIcon } from './SkillIcon'
 import { SkillsItem } from '@/types'
 import { ItemCard } from './ItemCard'
 import React from 'react'
+import { config } from '@/config'
 
 export const SkillListItem = ({
   skill,
@@ -25,7 +26,9 @@ export const SkillListItem = ({
     return input.split(/(<b:\w+>)/g).map((part, index) => {
       if (/<b:(\w+)>/.test(part)) {
         const match = part.match(/<b:(\w+)>/)
-        const src = match ? `/images/buff/Buff_${match[1]}.webp` : ''
+        const src = match
+          ? `${config.baseUrl}/images/buff/Buff_${match[1]}.webp`
+          : ''
         return (
           <div
             key={index}
@@ -48,7 +51,7 @@ export const SkillListItem = ({
     <>
       <div className="flex items-center justify-start">
         <SkillIcon
-          icon={`/images/skill/${skill.Icon}.webp`}
+          icon={`${config.baseUrl}/images/skill/${skill.Icon}.webp`}
           color={skillColor}
         />
         <div className="flex-row px-2">
@@ -63,7 +66,7 @@ export const SkillListItem = ({
         {skill.Radius && skill.Radius[0].Type == 'Circle' ? (
           <>
             <ItemCard
-              imgPath="/images/skill/COMMON_SKILLICON_CIRCLE.webp"
+              imgPath={`${config.baseUrl}/images/skill/COMMON_SKILLICON_CIRCLE.webp`}
               text={skill.Radius[0].Radius!.toString()}
             />
             <div className="w-2"></div>
@@ -72,7 +75,7 @@ export const SkillListItem = ({
         {skill.Radius && skill.Radius[0].Type == 'Obb' ? (
           <>
             <ItemCard
-              imgPath="/images/skill/COMMON_SKILLICON_LINE.webp"
+              imgPath={`${config.baseUrl}/images/skill/COMMON_SKILLICON_LINE.webp`}
               text={skill.Radius[0].Height!.toString()}
             />
             <div className="w-2"></div>
@@ -81,7 +84,7 @@ export const SkillListItem = ({
         {skill.Range ? (
           <>
             <ItemCard
-              imgPath="/images/staticon/Stat_Range.png"
+              imgPath={`${config.baseUrl}/images/staticon/Stat_Range.png`}
               text={skill.Range.toString()}
             />
             <div className="w-2"></div>
@@ -89,7 +92,7 @@ export const SkillListItem = ({
         ) : null}
         {skill.Duration ? (
           <ItemCard
-            imgPath="/images/staticon/Stat_GroggyTime.png"
+            imgPath={`${config.baseUrl}/images/staticon/Stat_GroggyTime.png`}
             text={(skill.Duration! / 30).toFixed(2)}
           />
         ) : null}

@@ -32,7 +32,7 @@ export default async function Page({
     >
       <div className="flex w-1/2 h-full py-2 items-center justify-center">
         <img
-          src={`/images/student/portrait/${id}.webp`}
+          src={`${config.baseUrl}/images/student/portrait/${id}.webp`}
           className="object-contain h-full"
         />
       </div>
@@ -46,7 +46,7 @@ export default async function Page({
             }).map((_, i) => (
               <img
                 key={i}
-                src="/images/ui/Common_Icon_Formation_Star.png"
+                src={`${config.baseUrl}/images/ui/Common_Icon_Formation_Star.png`}
                 className="w-4 h-4"
               />
             ))}
@@ -68,18 +68,20 @@ export default async function Page({
           <div className="flex-row">
             <div className="flex items-start">
               <ItemCard
-                imgPath={`/images/ui/Role_${student.data!.TacticRole}.png`}
+                imgPath={`${config.baseUrl}/images/ui/Role_${
+                  student.data!.TacticRole
+                }.png`}
                 text={localization['TacticRole'][student.data!.TacticRole]}
               />
               <div className="w-2"></div>
               <ItemCardWithBG
-                imgPath={`/images/ui/Type_Attack.png`}
+                imgPath={`${config.baseUrl}/images/ui/Type_Attack.png`}
                 imgBG={bulletTypeColor[student.data!.BulletType]}
                 text={localization['BulletType'][student.data!.BulletType]}
               />
               <div className="w-2"></div>
               <ItemCardWithBG
-                imgPath={`/images/ui/Type_Defense.png`}
+                imgPath={`${config.baseUrl}/images/ui/Type_Defense.png`}
                 imgBG={armorTypeColor[student.data!.ArmorType]}
                 text={localization['ArmorType'][student.data!.ArmorType]}
               />
@@ -87,7 +89,9 @@ export default async function Page({
             <div className="h-1"></div>
             <div className="flex h-17 items-start">
               <ItemCard
-                imgPath={`/images/schoolicon/School_Icon_${student.data!.School.toUpperCase()}_W.png`}
+                imgPath={`${
+                  config.baseUrl
+                }/images/schoolicon/School_Icon_${student.data!.School.toUpperCase()}_W.png`}
                 text={`${localization['School'][student.data!.School]}/${
                   localization['Club'][student.data!.Club]
                 }`}
@@ -97,22 +101,22 @@ export default async function Page({
           {/* right side */}
           <div className="flex">
             <TerrainCard
-              img1="/images/ui/Terrain_Street.png"
-              img2={`/images/ui/${
+              img1={`${config.baseUrl}/images/ui/Terrain_Street.png`}
+              img2={`${config.baseUrl}/images/ui/${
                 adaptresultTranslate[student.data!.StreetBattleAdaptation]
               }.png`}
             />
             <div className="w-1"></div>
             <TerrainCard
-              img1="/images/ui/Terrain_Outdoor.png"
-              img2={`/images/ui/${
+              img1={`${config.baseUrl}/images/ui/Terrain_Outdoor.png`}
+              img2={`${config.baseUrl}/images/ui/${
                 adaptresultTranslate[student.data!.OutdoorBattleAdaptation]
               }.png`}
             />
             <div className="w-1"></div>
             <TerrainCard
-              img1="/images/ui/Terrain_Indoor.png"
-              img2={`/images/ui/${
+              img1={`${config.baseUrl}/images/ui/Terrain_Indoor.png`}
+              img2={`${config.baseUrl}/images/ui/${
                 adaptresultTranslate[student.data!.IndoorBattleAdaptation]
               }.png`}
             />
@@ -120,7 +124,7 @@ export default async function Page({
             <div className="flex-row h-full p-1 rounded-md backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20">
               <div className="flex">
                 <img
-                  src="/images/ui/Combat_Icon_Cover_Ally.png"
+                  src={`${config.baseUrl}/images/ui/Combat_Icon_Cover_Ally.png`}
                   className="h-6"
                 ></img>
                 <p className="font-sans font-bold italic">{`${
@@ -129,7 +133,9 @@ export default async function Page({
               </div>
               <div className="flex w-full items-center">
                 <img
-                  src={`/images/weapon/${student.data!.WeaponImg}.webp`}
+                  src={`${config.baseUrl}/images/weapon/${
+                    student.data!.WeaponImg
+                  }.webp`}
                   className="h-10"
                 />
               </div>
@@ -142,7 +148,9 @@ export default async function Page({
             <div key={index} className="flex">
               <EquipmentCard
                 key={equipment}
-                src={`/images/equipment/icon/equipment_icon_${equipment.toLowerCase()}_tier1.webp`}
+                src={`${
+                  config.baseUrl
+                }/images/equipment/icon/equipment_icon_${equipment.toLowerCase()}_tier1.webp`}
               />
               <div className="w-3"></div>
             </div>
@@ -150,16 +158,18 @@ export default async function Page({
           <div className="w-[1px] h-16 bg-gray-500"></div>
           <div className="w-3"></div>
           {Object.keys(student.data!.Gear).length !== 0 ? (
-            <EquipmentCard src={`/images/gear/icon/${id}.webp`} />
+            <EquipmentCard
+              src={`${config.baseUrl}/images/gear/icon/${id}.webp`}
+            />
           ) : (
-            <EquipmentCard src={`/images/gear/empty.png`} />
+            <EquipmentCard src={`${config.baseUrl}/images/gear/empty.png`} />
           )}
         </div>
         <div className="h-3"></div>
         <div className="flex w-full rounded-md items-center p-1 backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20">
           <div className="grid grid-cols-2 w-full">
             <DetailTableItem
-              icon="/images/staticon/Stat_MaxHP.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_MaxHP.png`}
               text="最大HP"
               value={student
                 .interpolateStat(
@@ -171,7 +181,7 @@ export default async function Page({
                 .toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_AttackPower.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_AttackPower.png`}
               text="攻击力"
               value={student
                 .interpolateStat(
@@ -183,7 +193,7 @@ export default async function Page({
                 .toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_DefensePower.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_DefensePower.png`}
               text="防御力"
               value={student
                 .interpolateStat(
@@ -194,7 +204,7 @@ export default async function Page({
                 .toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_HealPower.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_HealPower.png`}
               text="治疗力"
               value={student
                 .interpolateStat(
@@ -206,63 +216,63 @@ export default async function Page({
                 .toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_AccuracyPoint.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_AccuracyPoint.png`}
               text="命中值"
               value={student.data!.AccuracyPoint.toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_DodgePoint.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_DodgePoint.png`}
               text="闪避值"
               value={student.data!.DodgePoint.toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_CriticalPoint.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_CriticalPoint.png`}
               text="暴击值"
               value={student.data!.CriticalPoint.toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_CriticalChanceResistPoint.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_CriticalChanceResistPoint.png`}
               text="暴击抵抗力"
               value={'100'}
             />
             {/* TODO:计算暴伤 */}
             <DetailTableItem
-              icon="/images/staticon/Stat_CriticalDamageRate.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_CriticalDamageRate.png`}
               text="暴击伤害"
               value={`${student.data!.CriticalDamageRate / 100}%`}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_CriticalDamageResistRate.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_CriticalDamageResistRate.png`}
               text="暴击伤害抵抗率"
               value={'50'}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_StabilityPoint.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_StabilityPoint.png`}
               text="稳定值"
               value={student.data!.StabilityPoint.toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_Range.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_Range.png`}
               text="普通攻击射程"
               value={student.data!.Range.toString()}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_OppressionPower.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_OppressionPower.png`}
               text="群控强化"
               value={'100'}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_OppressionResist.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_OppressionResist.png`}
               text="群控抵抗"
               value={'100'}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_DefensePenetration.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_DefensePenetration.png`}
               text="防御无视值"
               value={'0'}
             />
             <DetailTableItem
-              icon="/images/staticon/Stat_AmmoCount.png"
+              icon={`${config.baseUrl}/images/staticon/Stat_AmmoCount.png`}
               text="装弹数"
               value={`${student.data!.AmmoCount}(${student.data!.AmmoCost})`}
             />

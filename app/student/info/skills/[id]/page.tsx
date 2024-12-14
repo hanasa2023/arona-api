@@ -25,7 +25,7 @@ export default async function Page({
     >
       <div className="flex w-1/2 h-full py-2 items-center justify-center">
         <img
-          src={`/images/student/portrait/${id}.webp`}
+          src={`${config.baseUrl}/images/student/portrait/${id}.webp`}
           className="object-contain h-full"
         />
       </div>
@@ -39,7 +39,7 @@ export default async function Page({
             }).map((_, i) => (
               <img
                 key={i}
-                src="/images/ui/Common_Icon_Formation_Star.png"
+                src={`${config.baseUrl}/images/ui/Common_Icon_Formation_Star.png`}
                 className="w-4 h-4"
               />
             ))}
@@ -62,7 +62,7 @@ export default async function Page({
             <div className="flex-row w-full rounded-md p-2 backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20 shadow-lg">
               <div className="flex items-center justify-start">
                 <SkillIcon
-                  icon="/images/skill/COMMON_SKILLICON_TARGET.webp"
+                  icon={`${config.baseUrl}/images/skill/COMMON_SKILLICON_TARGET.webp`}
                   color={skillColor[student.data!.BulletType]}
                 />
                 <div className="flex-row px-2">
@@ -77,12 +77,12 @@ export default async function Page({
               <div className="h-2"></div>
               <div className="flex">
                 <ItemCard
-                  imgPath="/images/staticon/Stat_Range.png"
+                  imgPath={`${config.baseUrl}/images/staticon/Stat_Range.png`}
                   text={student.data!.Range.toString()}
                 />
                 <div className="w-2"></div>
                 <ItemCard
-                  imgPath="/images/staticon/Stat_AmmoCount.png"
+                  imgPath={`${config.baseUrl}/images/staticon/Stat_AmmoCount.png`}
                   text={`${student.data!.AmmoCount}(${student.data!.AmmoCost})`}
                 />
               </div>
@@ -145,7 +145,7 @@ export default async function Page({
                 student.data!.Skills[1].Radius[0].Type === 'Circle' ? (
                   <>
                     <ItemCard
-                      imgPath="/images/skill/COMMON_SKILLICON_CIRCLE.webp"
+                      imgPath={`${config.baseUrl}/images/skill/COMMON_SKILLICON_CIRCLE.webp`}
                       text={student.data!.Skills[1].Radius[0].Radius!.toString()}
                     />
                     <div className="w-2"></div>
@@ -155,7 +155,7 @@ export default async function Page({
                 student.data!.Skills[1].Radius[0].Type === 'Obb' ? (
                   <>
                     <ItemCard
-                      imgPath="/images/skill/COMMON_SKILLICON_LINE.webp"
+                      imgPath={`${config.baseUrl}/images/skill/COMMON_SKILLICON_LINE.webp`}
                       text={student.data!.Skills[1].Radius[0].Height!.toString()}
                     />
                     <div className="w-2"></div>
@@ -164,7 +164,7 @@ export default async function Page({
                 {student.data!.Skills[1].Range ? (
                   <>
                     <ItemCard
-                      imgPath="/images/staticon/Stat_Range.png"
+                      imgPath={`${config.baseUrl}/images/staticon/Stat_Range.png`}
                       text={student.data!.Skills[1].Range.toString()}
                     />
                     <div className="w-2"></div>
@@ -172,7 +172,7 @@ export default async function Page({
                 ) : null}
                 {student.data!.Skills[1].Duration ? (
                   <ItemCard
-                    imgPath="/images/staticon/Stat_GroggyTime.png"
+                    imgPath={`${config.baseUrl}/images/staticon/Stat_GroggyTime.png`}
                     text={(student.data!.Skills[1].Duration! / 30).toFixed(2)}
                   />
                 ) : null}
@@ -182,7 +182,9 @@ export default async function Page({
             <div className="flex-row w-full rounded-md p-2 backdrop-blur-md backdrop-brightness-110 backdrop-saturate-150 bg-white/30 border border-white/20 shadow-lg">
               <div className="flex items-center justify-start">
                 <SkillIcon
-                  icon={`/images/skill/${student.data!.Skills[1].Icon}.webp`}
+                  icon={`${config.baseUrl}/images/skill/${
+                    student.data!.Skills[1].Icon
+                  }.webp`}
                   color={skillColor[student.data!.BulletType]}
                 />
                 <div className="flex-row px-2">
