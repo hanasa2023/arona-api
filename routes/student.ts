@@ -1,15 +1,11 @@
 import { config } from '@/config'
 import { Hono } from 'hono'
-import fs from 'fs'
-import path from 'path'
 import { IBrowser } from '@/utils/borswer'
+import { IOSS } from '@/utils/oss'
 
-const studentsData = JSON.parse(
-  fs.readFileSync(
-    path.join(process.cwd(), '/public/data/zh/students.min.json'),
-    { encoding: 'utf-8' }
-  )
-)
+const studentsData = await (
+  await fetch(`${config.baseUrl}/data/zh/students.min.json`)
+).json()
 
 const app = new Hono()
 
@@ -44,32 +40,28 @@ app
       return c.notFound()
     }
     const { id } = c.req.param()
-    const ids = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), '/public/data/ids.json'), {
-        encoding: 'utf-8',
-      })
-    )
+    const ids = await (await fetch(`${config.baseUrl}/data/ids.json`)).json()
     for (const iId of ids) {
       if (iId.toString() === id) {
-        const img = await (
-          await fetch(`${config.baseUrl}/images/student/l2d/${id}.webp`)
-        ).arrayBuffer()
-        if (img)
-          return c.body(img, 200, {
-            'Content-Type': 'image/webp',
-          })
+        return c.json({
+          code: 200,
+          message: 'success',
+          data: {
+            imgPath: `${config.baseUrl}/images/student/l2d/${id}.webp`,
+          },
+        })
       }
     }
   })
   .get('/info/:id', async (c) => {
     const { id } = c.req.param()
-    const imgPath = path.join(
-      process.cwd(),
-      `/public/images/student-info/${id}.png`
-    )
+    const imgPath = `/images/student-info/${id}.png`
+    const client = IOSS.getClient()
+    const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
-      if (!fs.existsSync(imgPath)) {
-        const url = `${config.baseUrl}/student/info/${id}`
+      if (!isImgExist) {
+        const url = `http://localhost:${config.port}/student/info/${id}`
+        console.info(url)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
         await page.setViewportSize({
@@ -79,14 +71,18 @@ app
         await page.goto(url, { waitUntil: 'networkidle' })
         const card = await page.$('#info-card')
         if (!card) throw new Error('Card element not found')
-        await card.screenshot({
+        const screenshot = await card.screenshot({
           type: 'png',
-          path: imgPath,
         })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
       }
-      const data = new Uint8Array(fs.readFileSync(imgPath))
-      return c.body(data.buffer, 200, {
-        'Content-Type': 'image/png',
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgUrl: `${config.baseUrl}${imgPath}`,
+        },
       })
     } catch (e) {
       console.error(e)
@@ -110,13 +106,14 @@ app
         500
       )
     }
-    const imgPath = path.join(
-      process.cwd(),
-      `/public/images/student-info/${id}_${level}.png`
-    )
+    const imgPath = `/images/student-info/${id}_${level}.png`
+    const client = IOSS.getClient()
+    const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
-      if (!fs.existsSync(imgPath)) {
-        const url = `${config.baseUrl}/student/info/${id}/${Number(level) + 10}`
+      if (!isImgExist) {
+        const url = `http://localhost:${config.port}/student/info/${id}/${
+          Number(level) + 10
+        }`
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
         await page.setViewportSize({
@@ -126,14 +123,18 @@ app
         await page.goto(url, { waitUntil: 'networkidle' })
         const card = await page.$('#info-card')
         if (!card) throw new Error('Card element not found')
-        await card.screenshot({
+        const screenshot = await card.screenshot({
           type: 'png',
-          path: imgPath,
         })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
       }
-      const data = new Uint8Array(fs.readFileSync(imgPath))
-      return c.body(data.buffer, 200, {
-        'Content-Type': 'image/png',
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgUrl: `${config.baseUrl}${imgPath}`,
+        },
       })
     } catch (e) {
       console.error(e)
@@ -148,13 +149,12 @@ app
   })
   .get('/skills/:id', async (c) => {
     const { id } = c.req.param()
-    const imgPath = path.join(
-      process.cwd(),
-      `/public/images/student-skills/${id}.png`
-    )
+    const imgPath = `/images/student-skills/${id}.png`
+    const client = await IOSS.getClient()
+    const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
-      if (!fs.existsSync(imgPath)) {
-        const url = `${config.baseUrl}/student/info/skills/${id}`
+      if (!isImgExist) {
+        const url = `http://localhost:${config.port}/student/info/skills/${id}`
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
         await page.setViewportSize({
@@ -164,14 +164,18 @@ app
         await page.goto(url, { waitUntil: 'networkidle' })
         const card = await page.$('#skill-card')
         if (!card) throw new Error('Card element not found')
-        await card.screenshot({
+        const screenshot = await card.screenshot({
           type: 'png',
-          path: imgPath,
         })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
       }
-      const data = new Uint8Array(fs.readFileSync(imgPath))
-      return c.body(data.buffer, 200, {
-        'Content-Type': 'image/png',
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgUrl: `${config.baseUrl}${imgPath}`,
+        },
       })
     } catch (e) {
       console.error(e)

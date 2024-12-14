@@ -21,7 +21,9 @@ export class Student {
 
   async init() {
     this.data = (
-      await (await fetch(`${config.baseUrl}/api/student/${this.id}`)).json()
+      await (
+        await fetch(`http://localhost:${config.port}/api/student/${this.id}`)
+      ).json()
     )['data']
 
     for (let i = 0; i < this.data!.StarGrade; i++) {
