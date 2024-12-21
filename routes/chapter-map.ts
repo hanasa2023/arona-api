@@ -11,10 +11,11 @@ app.get('/:chapter', async (c) => {
   const isImgExist = await IOSS.isObjectExist(imgPath)
   if (isImgExist) {
     const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { date: string } }
+      res: { headers: { 'last-modified': string } }
     }
+    console.info(head.res.headers)
     const hash = createHash('sha256')
-      .update(head.res.headers['date'])
+      .update(head.res.headers['last-modified'])
       .digest('hex')
     return c.json({
       code: 200,

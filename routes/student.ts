@@ -44,10 +44,10 @@ app
     const imgPath = `/images/student/l2d/${id}.webp`
     const isImgExist = await IOSS.isObjectExist(imgPath)
     const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { date: string } }
+      res: { headers: { 'last-modified': string } }
     }
     const hash = createHash('sha256')
-      .update(head.res.headers['date'])
+      .update(head.res.headers['last-modified'])
       .digest('hex')
     if (isImgExist) {
       return c.json({
@@ -65,7 +65,7 @@ app
         message: 'Invalid id',
         data: {},
       },
-      500,
+      500
     )
   })
   .get('/info/:id', async (c) => {
@@ -74,10 +74,10 @@ app
     const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
     const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { date: string } }
+      res: { headers: { 'last-modified': string } }
     }
     const hash = createHash('sha256')
-      .update(head.res.headers['date'])
+      .update(head.res.headers['last-modified'])
       .digest('hex')
     try {
       if (!isImgExist) {
@@ -113,7 +113,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -125,17 +125,17 @@ app
           code: 500,
           message: 'Invalid level',
         },
-        500,
+        500
       )
     }
     const imgPath = `/images/student-info/${id}_${level}.png`
     const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
     const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { date: string } }
+      res: { headers: { 'last-modified': string } }
     }
     const hash = createHash('sha256')
-      .update(head.res.headers['date'])
+      .update(head.res.headers['last-modified'])
       .digest('hex')
     try {
       if (!isImgExist) {
@@ -172,7 +172,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -182,10 +182,10 @@ app
     const client = await IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
     const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { date: string } }
+      res: { headers: { 'last-modified': string } }
     }
     const hash = createHash('sha256')
-      .update(head.res.headers['date'])
+      .update(head.res.headers['last-modified'])
       .digest('hex')
     try {
       if (!isImgExist) {
@@ -220,7 +220,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
