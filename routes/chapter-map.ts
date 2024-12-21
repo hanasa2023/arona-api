@@ -7,7 +7,7 @@ const app = new Hono()
 
 app.get('/:chapter', async (c) => {
   const { chapter } = c.req.param()
-  const imgPath = `/images/chapter-map/${chapter}.webp`
+  const imgPath = `/images/chapter-map/${chapter}.png`
   const isImgExist = await IOSS.isObjectExist(imgPath)
   if (isImgExist) {
     const head = (await IOSS.getClient().head(imgPath)) as {
