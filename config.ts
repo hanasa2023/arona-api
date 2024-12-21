@@ -8,6 +8,7 @@ const envSchema = z.object({
   OSS_REGION: z.string(),
   OSS_ENDPOINT: z.string(),
   BUCKET: z.string(),
+  REDIS_URL: z.string(),
 })
 
 const env = envSchema.parse({
@@ -18,6 +19,7 @@ const env = envSchema.parse({
   OSS_REGION: process.env.OSS_REGION,
   OSS_ENDPOINT: process.env.OSS_ENDPOINT,
   BUCKET: process.env.BUCKET,
+  REDIS_URL: process.env.REDIS_URL,
 })
 
 export const config = {
@@ -28,6 +30,7 @@ export const config = {
   ossRegion: env.OSS_REGION,
   ossEndpoint: env.OSS_ENDPOINT,
   bucket: env.BUCKET,
+  redisUrl: env.REDIS_URL,
 } as const
 
 export type Config = typeof config

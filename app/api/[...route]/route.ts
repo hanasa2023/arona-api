@@ -4,6 +4,8 @@ import { compress } from 'hono/compress'
 import student from 'routes/student'
 import strategy from 'routes/strategy'
 import chapterMap from 'routes/chapter-map'
+import meme from 'routes/meme'
+import illusts from 'routes/illusts'
 
 export const runtime = 'nodejs'
 
@@ -19,6 +21,8 @@ app.get('/hello', (c) => {
 app.route('/student', student)
 app.route('/strategy', strategy)
 app.route('/chapter-map', chapterMap)
+app.route('/meme', meme)
+app.route('/illusts', illusts)
 
 export const GET = handle(app)
 export const POST = handle(app)
