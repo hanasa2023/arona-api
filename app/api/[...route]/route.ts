@@ -6,6 +6,7 @@ import strategy from 'routes/strategy'
 import chapterMap from 'routes/chapter-map'
 import meme from 'routes/meme'
 import illusts from 'routes/illusts'
+import raid from 'routes/raid'
 
 export const runtime = 'nodejs'
 
@@ -23,6 +24,7 @@ app.route('/strategy', strategy)
 app.route('/chapter-map', chapterMap)
 app.route('/meme', meme)
 app.route('/illusts', illusts)
+app.route('/raid', raid)
 
 export const GET = handle(app)
 export const POST = handle(app)

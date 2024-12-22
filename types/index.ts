@@ -190,3 +190,63 @@ export interface AuthorDetailsDTO {
   user_id: string
   user_name: string
 }
+
+export interface LabelInfoData {
+  dataType: number
+  tryNumber: number
+}
+
+export interface RankLineData {
+  rank: number
+  bestRankingPoint: number
+  hard: string
+  battleTime: string
+  labelInfo: LabelInfoData[]
+}
+
+export interface SeasonDataMap {
+  key: string
+  value: string
+}
+
+export interface SeasonData {
+  season: number
+  map: SeasonDataMap
+  bossId: number
+  boss: string
+  startTime: string
+  endTime: string
+}
+
+export interface SeasonRecordData {
+  key: number
+  value: string
+}
+
+export interface BattleData {
+  platinum: number[]
+  gold: number[]
+  silver: number[]
+}
+
+export interface RaidChartsData {
+  time: number[]
+  data: { [key: string]: number[] }
+}
+
+export interface TrophyCutByTime {
+  id: number[]
+  platinum: number[]
+  gold: number[]
+  silver: number[]
+}
+
+export interface MemberChageData {
+  key: number[]
+  value: number[]
+}
+
+export interface DiffClearByTime {
+  id: number[]
+  lasts: number[][]
+}

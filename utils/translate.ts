@@ -333,3 +333,20 @@ export function translateTag(tag: string): string {
   tag = aliasMap.get(tag) || tag
   return tag
 }
+
+export const serverTranslate = ['', '国服', 'B服', '日服', '国际服', '国际服']
+
+export const bossTranslate = [
+  '',
+  'Binah',
+  'Chesed',
+  'Shirokuro',
+  'Hieronymus',
+  'KaitenFxMk0',
+  'Perorozilla',
+  'HOD',
+  'Goz',
+  'EN0005',
+  'RaidHoverCraft',
+  'EN0006',
+]

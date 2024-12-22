@@ -73,12 +73,6 @@ app
     const imgPath = `/images/student-info/${id}.png`
     const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
-    const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { 'last-modified': string } }
-    }
-    const hash = createHash('sha256')
-      .update(head.res.headers['last-modified'])
-      .digest('hex')
     try {
       if (!isImgExist) {
         const url = `http://localhost:${config.port}/student/info/${id}`
@@ -98,6 +92,12 @@ app
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
+      const head = (await IOSS.getClient().head(imgPath)) as {
+        res: { headers: { 'last-modified': string } }
+      }
+      const hash = createHash('sha256')
+        .update(head.res.headers['last-modified'])
+        .digest('hex')
       return c.json({
         code: 200,
         message: 'success',
@@ -131,12 +131,6 @@ app
     const imgPath = `/images/student-info/${id}_${level}.png`
     const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
-    const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { 'last-modified': string } }
-    }
-    const hash = createHash('sha256')
-      .update(head.res.headers['last-modified'])
-      .digest('hex')
     try {
       if (!isImgExist) {
         const url = `http://localhost:${config.port}/student/info/${id}/${
@@ -157,6 +151,12 @@ app
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
+      const head = (await IOSS.getClient().head(imgPath)) as {
+        res: { headers: { 'last-modified': string } }
+      }
+      const hash = createHash('sha256')
+        .update(head.res.headers['last-modified'])
+        .digest('hex')
       return c.json({
         code: 200,
         message: 'success',
@@ -181,12 +181,6 @@ app
     const imgPath = `/images/student-skills/${id}.png`
     const client = await IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
-    const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { 'last-modified': string } }
-    }
-    const hash = createHash('sha256')
-      .update(head.res.headers['last-modified'])
-      .digest('hex')
     try {
       if (!isImgExist) {
         const url = `http://localhost:${config.port}/student/info/skills/${id}`
@@ -205,6 +199,12 @@ app
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
+      const head = (await IOSS.getClient().head(imgPath)) as {
+        res: { headers: { 'last-modified': string } }
+      }
+      const hash = createHash('sha256')
+        .update(head.res.headers['last-modified'])
+        .digest('hex')
       return c.json({
         code: 200,
         message: 'success',

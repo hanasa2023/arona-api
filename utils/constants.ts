@@ -38,3 +38,5 @@ export const adaptresultTranslate = [
   'Ingame_Emo_AdaptresultS',
   'Ingame_Emo_AdaptresultSS',
 ]
+
+export const raidServer = 'https://api.arona.icu'

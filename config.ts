@@ -9,6 +9,7 @@ const envSchema = z.object({
   OSS_ENDPOINT: z.string(),
   BUCKET: z.string(),
   REDIS_URL: z.string(),
+  ARONA_ICU_TOKEN: z.string(),
 })
 
 const env = envSchema.parse({
@@ -20,6 +21,7 @@ const env = envSchema.parse({
   OSS_ENDPOINT: process.env.OSS_ENDPOINT,
   BUCKET: process.env.BUCKET,
   REDIS_URL: process.env.REDIS_URL,
+  ARONA_ICU_TOKEN: process.env.ARONA_ICU_TOKEN,
 })
 
 export const config = {
@@ -31,6 +33,7 @@ export const config = {
   ossEndpoint: env.OSS_ENDPOINT,
   bucket: env.BUCKET,
   redisUrl: env.REDIS_URL,
+  aronaIcuToken: env.ARONA_ICU_TOKEN,
 } as const
 
 export type Config = typeof config
