@@ -9,7 +9,6 @@
   "dependencies": {
     "@alicloud/credentials": "^2.4.0",
     "ali-oss": "^6.22.0",
-    "canvas": "^2.11.2",
     "echarts": "^5.5.1",
     "graceful-fs": "^4.2.11",
     "hono": "^4.6.13",
