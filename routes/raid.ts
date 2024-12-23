@@ -30,6 +30,8 @@ import {
   TooltipComponentOption,
 } from 'echarts'
 import sharp from 'sharp'
+import { IOSS } from '@/utils/oss'
+import { createHash } from 'crypto'
 
 type ECOption = ComposeOption<
   | LineSeriesOption
@@ -64,26 +66,42 @@ app
         { status: 400 }
       )
     }
+    const imgPath = `/images/raid-line/${server}.png`
+    const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
-      const url = `http://localhost:${config.port}/raid/line/${server}`
-      console.info(url)
-      const browser = await IBrowser.launchBrowser()
-      const page = await browser.newPage()
-      await page.setViewportSize({
-        width: 1920,
-        height: 1080,
-      })
-      await page.goto(url, { waitUntil: 'networkidle' })
-      const card = await page.$('#card')
-      if (!card) throw new Error('Card element not found')
-      const screenshot = await card.screenshot({
-        type: 'jpeg',
-        omitBackground: true,
-        quality: 80,
-      })
-      const data = Buffer.from(screenshot)
-      return c.body(data.buffer, 200, {
-        'Content-Type': 'image/png',
+      if (!isImgExist) {
+        const client = await IOSS.getClient()
+        const url = `http://localhost:${config.port}/raid/line/${server}`
+        console.info(url)
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#card')
+        if (!card) throw new Error('Card element not found')
+        const screenshot = await card.screenshot({
+          type: 'jpeg',
+          omitBackground: true,
+          quality: 80,
+        })
+        await client.put(imgPath, screenshot)
+      }
+      const head = (await IOSS.getClient().head(imgPath)) as {
+        res: { headers: { 'last-modified': string } }
+      }
+      const hash = createHash('sha256')
+        .update(head.res.headers['last-modified'])
+        .digest('hex')
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgUrl: `${config.baseUrl}${imgPath}`,
+          hash,
+        },
       })
     } catch (e) {
       console.error(e)
@@ -639,6 +657,42 @@ app
         500
       )
     }
+  })
+  .get('/update', async (c) => {
+    const client = await IOSS.getClient()
+    const info = []
+    for (const server of [1, 2, 3]) {
+      const imgPath = `/images/raid-line/${server}.png`
+      try {
+        const url = `http://localhost:${config.port}/raid/line/${server}`
+        console.info(url)
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#card')
+        if (!card) throw new Error('Card element not found')
+        const screenshot = await card.screenshot({
+          type: 'jpeg',
+          omitBackground: true,
+          quality: 80,
+        })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
+        info.push(`更新${server}成功`)
+      } catch (e) {
+        console.error(e)
+        info.push(`更新${server}失败`)
+      }
+    }
+    return c.json({
+      code: 200,
+      message: 'success',
+      data: info,
+    })
   })
 
 export default app
