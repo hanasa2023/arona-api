@@ -3,6 +3,40 @@ import { Hono } from 'hono'
 import { IBrowser } from '@/utils/borswer'
 import { IOSS } from '@/utils/oss'
 import { createHash } from 'crypto'
+import * as echarts from 'echarts/core'
+import { SVGRenderer } from 'echarts/renderers'
+import { HeatmapChart } from 'echarts/charts'
+import {
+  CalendarComponent,
+  VisualMapComponent,
+  TooltipComponent,
+  TitleComponent,
+} from 'echarts/components'
+import {
+  ComposeOption,
+  CalendarComponentOption,
+  HeatmapSeriesOption,
+  TooltipComponentOption,
+  VisualMapComponentOption,
+  TitleComponentOption,
+} from 'echarts'
+import sharp from 'sharp'
+
+type ECOption = ComposeOption<
+  | CalendarComponentOption
+  | TooltipComponentOption
+  | VisualMapComponentOption
+  | HeatmapSeriesOption
+  | TitleComponentOption
+>
+
+echarts.use([
+  SVGRenderer,
+  CalendarComponent,
+  TooltipComponent,
+  VisualMapComponent,
+  HeatmapChart,
+])
 
 const studentsData = await (
   await fetch(`${config.baseUrl}/data/zh/students.min.json`)
@@ -198,6 +232,107 @@ app
         })
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
+      }
+      const head = (await IOSS.getClient().head(imgPath)) as {
+        res: { headers: { 'last-modified': string } }
+      }
+      const hash = createHash('sha256')
+        .update(head.res.headers['last-modified'])
+        .digest('hex')
+      return c.json({
+        code: 200,
+        message: 'success',
+        data: {
+          imgUrl: `${config.baseUrl}${imgPath}`,
+          hash,
+        },
+      })
+    } catch (e) {
+      console.error(e)
+      return c.json(
+        {
+          code: 500,
+          message: 'Internal server error',
+        },
+        500
+      )
+    }
+  })
+  .get('/birthday/distribution', async (c) => {
+    const imgPath = '/images/student-birthday/distribution.png'
+    const client = await IOSS.getClient()
+    const isImgExist = await IOSS.isObjectExist(imgPath)
+    try {
+      if (!isImgExist) {
+        const height = 360
+        const width = 1200
+        const chart = echarts.init(null, 'light', {
+          renderer: 'svg',
+          ssr: true,
+          width: width,
+          height: height,
+        })
+        const birthdays = new Map<number, number>()
+        studentsData.forEach((studentData: any) => {
+          const birthdayString = studentData['BirthDay'].replace('/', '-')
+          const date = +echarts.time.parse('2024-' + birthdayString)
+          if (date) {
+            if (birthdays.has(date)) {
+              birthdays.set(date, birthdays.get(date)! + 1)
+            } else {
+              birthdays.set(date, 0)
+            }
+          }
+        })
+
+        const getVirtualData = (year: string) => {
+          const date = +echarts.time.parse(year + '-01-01')
+          const end = +echarts.time.parse(+year + 1 + '-01-01')
+          const dayTime = 3600 * 24 * 1000
+          const data: [string, number][] = []
+          for (let time = date; time < end; time += dayTime) {
+            data.push([
+              echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
+              birthdays.get(time) ?? 0,
+            ])
+          }
+          return data
+        }
+
+        chart.setOption<ECOption>({
+          title: {
+            text: '学生生日分布图',
+            top: 25,
+            left: 'center',
+          },
+          visualMap: {
+            min: 0,
+            max: 3,
+            calculable: true,
+            orient: 'horizontal',
+            left: 'center',
+            top: 50,
+          },
+          calendar: [
+            {
+              orient: 'horizontal',
+              range: '2024',
+              top: 120,
+              yearLabel: { show: false },
+            },
+          ],
+          series: [
+            {
+              type: 'heatmap',
+              coordinateSystem: 'calendar',
+              data: getVirtualData('2024'),
+            },
+          ],
+        })
+        const img = await sharp(Buffer.from(chart.renderToSVGString()))
+          .png()
+          .toBuffer()
+        await client.put(imgPath, img)
       }
       const head = (await IOSS.getClient().head(imgPath)) as {
         res: { headers: { 'last-modified': string } }
