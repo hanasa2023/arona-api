@@ -1,0 +1,23 @@
+name: Daily Update
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  make-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Raid Line Img
+        run: |
+          response=$(curl -s -w "\n%{http_code}" https://arona.hanasaki.tech/api/raid/line/update)
+            status_code=$(echo "$response" | tail -n1)
+            body=$(echo "$response" | sed '$d')
+            
+            echo "Status code: $status_code"
+            echo "Response body: $body"
+            
+            if [ "$status_code" -ne 200 ]; then
+              echo "Request failed with status $status_code"
+              exit 1
+            fi
