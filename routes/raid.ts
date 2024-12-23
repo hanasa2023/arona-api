@@ -262,7 +262,7 @@ app
           ],
         })
       } else {
-        const season = 72
+        const season = config.jpRaidSeason
         const url = `https://media.arona.ai/data/v3/raid/${season}/total`
         const data: TrophyCutByTime = (await iFetch(url, null, 'GET'))[
           'trophyCutByTime'
@@ -458,7 +458,7 @@ app
           ],
         })
       } else {
-        const season = 72
+        const season = config.jpRaidSeason
         const url = `https://media.arona.ai/data/v3/raid/${season}/total`
         const diffClearByTime: DiffClearByTime = (
           await iFetch(url, null, 'GET')
