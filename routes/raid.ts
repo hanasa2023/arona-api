@@ -617,11 +617,13 @@ app
       )
     }
     try {
-      const time: number = await iFetch(
-        `${raidServer}/raids/calculate/${server}?bossId=${bossId}&point=${point}`,
-        null,
-        'GET'
-      )
+      const time: number = (
+        await iFetch(
+          `${raidServer}/raids/calculate/${server}?bossId=${bossId}&point=${point}`,
+          null,
+          'GET'
+        )
+      )['data']
       return c.json({
         code: 200,
         message: 'success',
