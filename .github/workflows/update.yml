@@ -10,7 +10,11 @@ jobs:
     steps:
       - name: Update Raid Line Img
         run: |
-          response=$(curl -s -w "\n%{http_code}" https://arona.hanasaki.tech/api/raid/update)
+          response=$(curl -s -w "\n%{http_code}" \
+              -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" \
+              -H "Accept: application/json" \
+              -L \
+              https://arona.hanasaki.tech/api/raid/update)
             status_code=$(echo "$response" | tail -n1)
             body=$(echo "$response" | sed '$d')
             
