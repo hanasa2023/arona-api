@@ -12,6 +12,7 @@
     "echarts": "^5.5.1",
     "graceful-fs": "^4.2.11",
     "hono": "^4.6.13",
+    "jsdom": "^25.0.1",
     "mz": "^2.7.0",
     "next": "^15",
     "playwright": "^1.49.1",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/ali-oss": "^6.16.11",
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
