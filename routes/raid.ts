@@ -17,6 +17,7 @@ import {
   TitleComponent,
   TooltipComponent,
   GridComponent,
+  GraphicComponent,
   TimelineComponent,
   LegendComponent,
 } from 'echarts/components'
@@ -24,6 +25,7 @@ import {
   ComposeOption,
   GridComponentOption,
   LegendComponentOption,
+  GraphicComponentOption,
   LineSeriesOption,
   TimelineComponentOption,
   TitleComponentOption,
@@ -32,6 +34,7 @@ import {
 import sharp from 'sharp'
 import { IOSS } from '@/utils/oss'
 import { createHash } from 'crypto'
+import { getJPRaidSeason } from '@/utils/tools'
 
 type ECOption = ComposeOption<
   | LineSeriesOption
@@ -40,6 +43,7 @@ type ECOption = ComposeOption<
   | TooltipComponentOption
   | TimelineComponentOption
   | LegendComponentOption
+  | GraphicComponentOption
 >
 
 echarts.use([
@@ -49,6 +53,7 @@ echarts.use([
   GridComponent,
   TooltipComponent,
   TimelineComponent,
+  GraphicComponent,
   LineChart,
 ])
 
@@ -63,14 +68,14 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
     const imgPath = `/images/raid-line/${server}.png`
     const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
       if (!isImgExist) {
-        const client = await IOSS.getClient()
+        const client = IOSS.getClient()
         const url = `http://localhost:${config.port}/raid/line/${server}`
         console.info(url)
         const browser = await IBrowser.launchBrowser()
@@ -110,7 +115,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -122,7 +127,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
     try {
@@ -151,7 +156,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -163,14 +168,14 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
     try {
       const height = 600
       const width = 900
-      const chart = echarts.init(null, 'light', {
+      const chart = echarts.init(null, 'dark', {
         renderer: 'svg',
         ssr: true,
         width: width,
@@ -227,6 +232,19 @@ app
             type: 'value',
             scale: true,
           },
+          graphic: [
+            {
+              type: 'text',
+              right: '10%',
+              bottom: '10%',
+              z: 10,
+              style: {
+                fill: '#fff',
+                text: '数据来源: arona.icu',
+                font: '20px sans-serif',
+              },
+            },
+          ],
           series: [
             {
               name: '1',
@@ -280,7 +298,7 @@ app
           ],
         })
       } else {
-        const season = config.jpRaidSeason
+        const season = await getJPRaidSeason()
         const url = `https://media.arona.ai/data/v3/raid/${season}/total`
         const data: TrophyCutByTime = (await iFetch(url, null, 'GET'))[
           'trophyCutByTime'
@@ -308,6 +326,19 @@ app
             top: 25,
             left: 25,
           },
+          graphic: [
+            {
+              type: 'text',
+              right: '10%',
+              bottom: '10%',
+              z: 10,
+              style: {
+                fill: '#fff',
+                text: '数据来源: arona.ai',
+                font: '20px sans-serif',
+              },
+            },
+          ],
           legend: {
             top: 25,
             data: ['一档', '二档', '三档'],
@@ -350,7 +381,7 @@ app
         })
       }
       const img = Buffer.from(
-        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer()
+        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer(),
       )
       return c.body(img.buffer, 200, {
         'Content-Type': 'image/png',
@@ -362,7 +393,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -374,7 +405,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -416,7 +447,7 @@ app
         })
 
         const deltaY = totalMember.value.map((v, i) =>
-          i === 0 ? 0 : v - totalMember.value[i - 1]
+          i === 0 ? 0 : v - totalMember.value[i - 1],
         )
 
         chart.setOption<ECOption>({
@@ -426,6 +457,19 @@ app
             top: 25,
             left: 25,
           },
+          graphic: [
+            {
+              type: 'text',
+              right: '10%',
+              bottom: '10%',
+              z: 10,
+              style: {
+                fill: '#fff',
+                text: '数据来源: arona.icu',
+                font: '20px sans-serif',
+              },
+            },
+          ],
           legend: {
             top: 25,
             data: ['参与人数', '增长量'],
@@ -476,7 +520,7 @@ app
           ],
         })
       } else {
-        const season = config.jpRaidSeason
+        const season = await getJPRaidSeason()
         const url = `https://media.arona.ai/data/v3/raid/${season}/total`
         const diffClearByTime: DiffClearByTime = (
           await iFetch(url, null, 'GET')
@@ -504,6 +548,19 @@ app
             top: 25,
             left: 25,
           },
+          graphic: [
+            {
+              type: 'text',
+              right: '10%',
+              bottom: '10%',
+              z: 10,
+              style: {
+                fill: '#fff',
+                text: '数据来源: arona.ai',
+                font: '20px sans-serif',
+              },
+            },
+          ],
           legend: {
             top: 25,
             data: ['NM', 'HD', 'VH', 'HC', 'EX', 'INS', 'TM'],
@@ -570,7 +627,7 @@ app
         })
       }
       const img = Buffer.from(
-        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer()
+        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer(),
       )
       return c.body(img.buffer, 200, {
         'Content-Type': 'image/png',
@@ -582,7 +639,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -594,7 +651,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
     try {
@@ -602,7 +659,7 @@ app
         await iFetch(
           `${raidServer}/raids/calculate_time/${server}?bossId=${bossId}&time=${time}&hard=${hard}`,
           null,
-          'GET'
+          'GET',
         )
       )['data']
       return c.json({
@@ -619,7 +676,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -631,7 +688,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
     try {
@@ -639,7 +696,7 @@ app
         await iFetch(
           `${raidServer}/raids/calculate/${server}?bossId=${bossId}&point=${point}`,
           null,
-          'GET'
+          'GET',
         )
       )['data']
       return c.json({
@@ -654,13 +711,14 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
   .get('/update', async (c) => {
-    const client = await IOSS.getClient()
+    const client = IOSS.getClient()
     const info = []
+    // 更新总力战档线
     for (const server of [1, 2, 3]) {
       const imgPath = `/images/raid-line/${server}.png`
       try {
