@@ -1,3 +1,5 @@
+import { JSDOM } from 'jsdom'
+
 export function getRandomSamples<T>(array: T[], num: number): T[] {
   if (num >= array.length) {
     num = array.length
@@ -29,8 +31,26 @@ export function formatTime(milliseconds: number): string {
   const remainingMilliseconds = milliseconds % 1000
 
   const formattedTime = `${String(minutes).padStart(2, '0')}:${String(
-    seconds
+    seconds,
   ).padStart(2, '0')}.${String(remainingMilliseconds).padStart(3, '0')}`
 
   return formattedTime
+}
+
+export async function getJPRaidSeason(): Promise<number> {
+  try {
+    const response = await fetch('https://arona.ai/raidreport')
+    if (response.ok) {
+      const html = await response.text()
+      const dom = new JSDOM(html)
+      const doc = dom.window.document
+      const season = doc.querySelector('.css-nej9ul')?.textContent
+
+      return season ? Number(season.split('.')[0]) : -1
+    }
+    return -1
+  } catch (e) {
+    console.error(e)
+    return -1
+  }
 }
