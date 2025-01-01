@@ -54,3 +54,20 @@ export async function getJPRaidSeason(): Promise<number> {
     return -1
   }
 }
+
+export async function getJPRaidBackgroundImage(): Promise<string> {
+  try {
+    const response = await fetch('https://arona.ai/raidreport')
+    if (response.ok) {
+      const html = await response.text()
+      const dom = new JSDOM(html)
+      const doc = dom.window.document
+      const src = doc.querySelector('.css-14syrz5 > img')?.getAttribute('src')
+      return src ? src : ''
+    }
+    return ''
+  } catch (e) {
+    console.error(e)
+    return ''
+  }
+}
