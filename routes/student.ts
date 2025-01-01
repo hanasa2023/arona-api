@@ -9,8 +9,8 @@ import { HeatmapChart } from 'echarts/charts'
 import {
   CalendarComponent,
   VisualMapComponent,
-  TooltipComponent,
   TitleComponent,
+  TooltipComponent,
 } from 'echarts/components'
 import {
   ComposeOption,
@@ -33,12 +33,13 @@ type ECOption = ComposeOption<
 echarts.use([
   SVGRenderer,
   CalendarComponent,
+  TitleComponent,
   TooltipComponent,
   VisualMapComponent,
   HeatmapChart,
 ])
 
-const studentsData = await (
+const studentsData: any[] = await (
   await fetch(`${config.baseUrl}/data/zh/students.min.json`)
 ).json()
 
@@ -99,7 +100,7 @@ app
         message: 'Invalid id',
         data: {},
       },
-      500
+      500,
     )
   })
   .get('/info/:id', async (c) => {
@@ -147,7 +148,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
@@ -159,7 +160,7 @@ app
           code: 500,
           message: 'Invalid level',
         },
-        500
+        500,
       )
     }
     const imgPath = `/images/student-info/${id}_${level}.png`
@@ -206,14 +207,14 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
   .get('/skills/:id', async (c) => {
     const { id } = c.req.param()
     const imgPath = `/images/student-skills/${id}.png`
-    const client = await IOSS.getClient()
+    const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
       if (!isImgExist) {
@@ -254,13 +255,13 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
   })
   .get('/birthday/distribution', async (c) => {
     const imgPath = '/images/student-birthday/distribution.png'
-    const client = await IOSS.getClient()
+    const client = IOSS.getClient()
     const isImgExist = await IOSS.isObjectExist(imgPath)
     try {
       if (!isImgExist) {
@@ -355,9 +356,72 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500
+        500,
       )
     }
+  })
+  .get('/all/update', async (c) => {
+    const client = IOSS.getClient()
+    const info = []
+    // // 更新学生信息
+    for (const [index, s] of studentsData.entries()) {
+      const imgPath = `/images/student-info/${s.Id}.png`
+      try {
+        const url = `http://localhost:${config.port}/student/info/${s.Id}`
+        console.info(`更新${s.Id}(${index + 1}/${studentsData.length})`)
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#info-card')
+        if (!card) throw new Error('Card element not found')
+        const screenshot = await card.screenshot({
+          type: 'png',
+          omitBackground: true,
+        })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
+        info.push(`更新${s.Name}信息成功`)
+      } catch (e) {
+        console.error(e)
+        info.push(`更新${s.Name}信息失败`)
+      }
+    }
+    // 更新学生技能信息
+    for (const [index, s] of studentsData.entries()) {
+      const imgPath = `/images/student-skills/${s.Id}.png`
+      try {
+        const url = `http://localhost:${config.port}/student/info/skills/${s.Id}`
+        console.info(`更新${s.Id}(${index + 1}/${studentsData.length})`)
+        const browser = await IBrowser.launchBrowser()
+        const page = await browser.newPage()
+        await page.setViewportSize({
+          width: 1920,
+          height: 1080,
+        })
+        await page.goto(url, { waitUntil: 'networkidle' })
+        const card = await page.$('#skill-card')
+        if (!card) throw new Error('Card element not found')
+        const screenshot = await card.screenshot({
+          type: 'png',
+          omitBackground: true,
+        })
+        const data = Buffer.from(screenshot)
+        await client.put(imgPath, data)
+        info.push(`更新${s.Name}技能成功`)
+      } catch (e) {
+        console.error(e)
+        info.push(`更新${s.Name}技能失败`)
+      }
+    }
+    return c.json({
+      code: 200,
+      message: 'success',
+      data: info,
+    })
   })
 
 export default app
