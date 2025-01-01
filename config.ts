@@ -10,7 +10,6 @@ const envSchema = z.object({
   BUCKET: z.string(),
   REDIS_URL: z.string(),
   ARONA_ICU_TOKEN: z.string(),
-  JP_RAID_SEASON: z.coerce.number(),
 })
 
 const env = envSchema.parse({
@@ -23,7 +22,6 @@ const env = envSchema.parse({
   BUCKET: process.env.BUCKET,
   REDIS_URL: process.env.REDIS_URL,
   ARONA_ICU_TOKEN: process.env.ARONA_ICU_TOKEN,
-  JP_RAID_SEASON: process.env.JP_RAID_SEASON,
 })
 
 export const config = {
@@ -36,7 +34,6 @@ export const config = {
   bucket: env.BUCKET,
   redisUrl: env.REDIS_URL,
   aronaIcuToken: env.ARONA_ICU_TOKEN,
-  jpRaidSeason: env.JP_RAID_SEASON,
 } as const
 
 export type Config = typeof config
