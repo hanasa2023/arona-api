@@ -734,9 +734,8 @@ app
         const card = await page.$('#card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
-          type: 'jpeg',
+          type: 'png',
           omitBackground: true,
-          quality: 80,
         })
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
