@@ -3,7 +3,11 @@ import { config } from '@/config'
 import { BattleData, RankLineData, SeasonData, SeasonRecordData } from '@/types'
 import { raidServer } from '@/utils/constants'
 import { iFetch } from '@/utils/ifetch'
-import { formatTime } from '@/utils/tools'
+import {
+  formatTime,
+  getJPRaidBackgroundImage,
+  getJPRaidSeason,
+} from '@/utils/tools'
 import { bossTranslate, serverTranslate } from '@/utils/translate'
 
 // TODO: 国际服档线
@@ -17,41 +21,50 @@ export default async function Page({
   const seasonList: SeasonData[] = (
     await iFetch(`${raidServer}/api/season/list`, { server })
   )['data'].reverse()
-  const season = seasonList[seasonList.length - 1].season
-  const rankData: RankLineData[] = (
-    await iFetch(`${raidServer}/api/v2/rank/list_top`, {
-      server,
-      season,
-    })
-  )['data']
-  const seasonRecordData: SeasonRecordData[] = (
-    await iFetch(
-      `${raidServer}/api/season/record_time/${season}?server=${server}`,
-      null,
-      'GET'
-    )
-  )['data']
+  const season =
+    server == 3
+      ? await getJPRaidSeason()
+      : seasonList[seasonList.length - 1].season
+  const rankData: RankLineData[] =
+    server == 3
+      ? []
+      : (
+          await iFetch(`${raidServer}/api/v2/rank/list_top`, {
+            server,
+            season,
+          })
+        )['data']
+  const seasonRecordData: SeasonRecordData[] =
+    server == 3
+      ? []
+      : (
+          await iFetch(
+            `${raidServer}/api/season/record_time/${season}?server=${server}`,
+            null,
+            'GET',
+          )
+        )['data']
   let battleData: BattleData | null = null
   try {
     battleData = (
       await iFetch(
         `https://media.arona.ai/data/v3/raid/${season}/total`,
         null,
-        'GET'
+        'GET',
       )
     )['diffTrophyCutAndDiffTop']
   } catch (e) {
     console.error(e)
   }
-  const bossId = seasonList[season].bossId
+  const bossId = server == 3 ? -1 : seasonList[season].bossId
 
   return (
     <>
-      {rankData.length ? (
+      {server != 3 ? (
         <div className="flex items-center w-full h-screen justify-center">
           <div
             id="card"
-            className="flex-row w-[600px] items-center justify-center rounded-lg px-8 py-4"
+            className="relative flex-row w-[600px] items-center justify-center rounded-lg px-8 py-4"
             style={{
               backgroundImage: `url(${config.baseUrl}/images/raid/Boss_Portrait_${bossTranslate[bossId]}_LobbyBG.png)`,
               backgroundSize: 'cover',
@@ -75,13 +88,22 @@ export default async function Page({
                 )
               })}
             </div>
+            <div className="mt-2 text-right">
+              <p className="text-white text-xs">数据来源：arona.icu</p>
+            </div>
           </div>
         </div>
       ) : (
         <div className="flex items-center w-full h-screen justify-center">
           <div
             id="card"
-            className="flex-row w-[600px] bg-slate-400 items-center justify-center rounded-lg px-8 py-4"
+            className="relative flex-row w-[600px] bg-slate-400 items-center justify-center rounded-lg px-8 py-4"
+            style={{
+              backgroundImage: `url(${await getJPRaidBackgroundImage()})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
           >
             <p className="text-center text-teal-100 text-xl font-semibold">{`${serverName}总力战第${season}期`}</p>
             <div className="flex w-full items-center justify-between">
@@ -100,6 +122,9 @@ export default async function Page({
                 score={battleData?.silver?.[0] ?? 0}
                 useTime={formatTime(battleData?.silver?.[1] ?? 0)}
               />
+            </div>
+            <div className="mt-2 text-right">
+              <p className="text-white text-xs">数据来源：arona.ai</p>
             </div>
           </div>
         </div>

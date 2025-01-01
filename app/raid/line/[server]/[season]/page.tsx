@@ -28,7 +28,7 @@ export default async function Page({
       await iFetch(
         `https://media.arona.ai/data/v3/raid/${season}/total`,
         null,
-        'GET'
+        'GET',
       )
     )['diffTrophyCutAndDiffTop']
   } catch (e) {
@@ -38,7 +38,7 @@ export default async function Page({
     await iFetch(
       `${raidServer}/api/season/record_time/${season}?server=${server}`,
       null,
-      'GET'
+      'GET',
     )
   )['data']
   const bossId = seasonList[season].bossId
@@ -47,7 +47,7 @@ export default async function Page({
     <div className="flex items-center w-full h-screen justify-center">
       <div
         id="card"
-        className="flex-row w-[600px] items-center justify-center rounded-lg px-8 py-4"
+        className="relative flex-row w-[600px] items-center justify-center rounded-lg px-8 py-4"
         style={{
           backgroundImage: `url(${config.baseUrl}/images/raid/Boss_Portrait_${bossTranslate[bossId]}_LobbyBG.png)`,
           backgroundSize: 'cover',
@@ -94,6 +94,9 @@ export default async function Page({
               )}
             </>
           )}
+          <div className="mt-2 text-right">
+            <p className="text-white text-xs">数据来源：arona.icu</p>
+          </div>
         </div>
       </div>
     </div>
