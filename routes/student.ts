@@ -40,7 +40,9 @@ echarts.use([
 ])
 
 const studentsData: any[] = await (
-  await fetch(`${config.baseUrl}/data/zh/students.min.json`)
+  await fetch(
+    `${config.baseUrl}/${config.bucket}/objects/download?preview=true&prefix=data/zh/students.min.json`,
+  )
 ).json()
 
 const app = new Hono()

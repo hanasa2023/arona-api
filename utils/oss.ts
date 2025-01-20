@@ -1,16 +1,16 @@
 import { config } from '@/config'
-import OSS from 'ali-oss'
+import * as Minio from 'minio'
+import { bucket } from './constants'
 
 export class IOSS {
-  private static instance: OSS | null = null
+  private static instance: Minio.Client | null = null
   static getClient() {
     if (!this.instance) {
-      this.instance = new OSS({
-        region: config.ossRegion,
-        accessKeyId: config.ossAccessKeyId,
-        accessKeySecret: config.ossAccessKeySecret,
-        endpoint: config.ossEndpoint,
-        bucket: config.bucket,
+      this.instance = new Minio.Client({
+        endPoint: config.ossEndpoint,
+        useSSL: true,
+        accessKey: config.ossAccessKeyId,
+        secretKey: config.ossAccessKeySecret,
       })
     }
     return this.instance
@@ -18,12 +18,10 @@ export class IOSS {
   static async isObjectExist(name: string) {
     let isExist = false
     try {
-      await IOSS.getClient().head(name)
+      await IOSS.getClient().statObject(bucket, name)
       isExist = true
     } catch (e: any) {
-      if (e.code === 'NoSuchKey') {
-        isExist = false
-      }
+      isExist = false
     } finally {
       return isExist
     }

@@ -40,3 +40,4 @@ export const adaptresultTranslate = [
 ]
 
 export const raidServer = 'https://api.arona.icu'
+export const bucket = 'arona'

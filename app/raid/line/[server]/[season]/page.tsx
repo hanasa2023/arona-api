@@ -49,7 +49,7 @@ export default async function Page({
         id="card"
         className="relative flex-row w-[600px] items-center justify-center rounded-lg px-8 py-4"
         style={{
-          backgroundImage: `url(${config.baseUrl}/images/raid/Boss_Portrait_${bossTranslate[bossId]}_LobbyBG.png)`,
+          backgroundImage: `url(${config.baseUrl}/${config.bucket}/objects/download?prefix=images/raid/Boss_Portrait_${bossTranslate[bossId]}_LobbyBG.png)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',

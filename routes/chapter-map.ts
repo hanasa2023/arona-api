@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { IOSS } from '@/utils/oss'
 import { config } from '@/config'
 import { createHash } from 'crypto'
+import { bucket } from '@/utils/constants'
 
 const app = new Hono()
 
@@ -10,12 +11,10 @@ app.get('/:chapter', async (c) => {
   const imgPath = `/images/chapter-map/${chapter}.png`
   const isImgExist = await IOSS.isObjectExist(imgPath)
   if (isImgExist) {
-    const head = (await IOSS.getClient().head(imgPath)) as {
-      res: { headers: { 'last-modified': string } }
-    }
-    console.info(head.res.headers)
+    const head = await IOSS.getClient().statObject(bucket, imgPath)
+    console.info(head.lastModified)
     const hash = createHash('sha256')
-      .update(head.res.headers['last-modified'])
+      .update(head.lastModified.toTimeString())
       .digest('hex')
     return c.json({
       code: 200,
@@ -32,7 +31,7 @@ app.get('/:chapter', async (c) => {
       message: 'Invalid chapter',
       data: {},
     },
-    500
+    500,
   )
 })
 

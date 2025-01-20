@@ -92,19 +92,17 @@ app
           omitBackground: true,
           quality: 80,
         })
-        await client.put(imgPath, screenshot)
+        await client.putObject(config.bucket, imgPath, screenshot)
       }
-      const head = (await IOSS.getClient().head(imgPath)) as {
-        res: { headers: { 'last-modified': string } }
-      }
+      const head = await IOSS.getClient().statObject(config.bucket, imgPath)
       const hash = createHash('sha256')
-        .update(head.res.headers['last-modified'])
+        .update(head.lastModified.toTimeString())
         .digest('hex')
       return c.json({
         code: 200,
         message: 'success',
         data: {
-          imgUrl: `${config.baseUrl}${imgPath}`,
+          imgUrl: `${config.baseUrl}/${config.bucket}/objects/downloads?prefix=${imgPath}`,
           hash,
         },
       })
@@ -738,7 +736,7 @@ app
           omitBackground: true,
         })
         const data = Buffer.from(screenshot)
-        await client.put(imgPath, data)
+        await client.putObject(config.bucket, imgPath, data)
         info.push(`更新${server}成功`)
       } catch (e) {
         console.error(e)

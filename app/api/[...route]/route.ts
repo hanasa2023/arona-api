@@ -20,7 +20,7 @@ app.get('/hello', (c) => {
 })
 
 app.route('/student', student)
-app.route('/strategy', strategy)
+// app.route('/strategy', strategy)
 app.route('/chapter-map', chapterMap)
 app.route('/meme', meme)
 app.route('/illusts', illusts)
