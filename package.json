@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@alicloud/credentials": "^2.4.0",
+    "@sparticuz/chromium": "132",
     "ali-oss": "^6.22.0",
     "echarts": "^5.5.1",
     "graceful-fs": "^4.2.11",
@@ -15,7 +16,7 @@
     "jsdom": "^25.0.1",
     "mz": "^2.7.0",
     "next": "^15",
-    "playwright": "^1.49.1",
+    "puppeteer-core": "^24.1.1",
     "react": "^19",
     "react-dom": "^19",
     "redis": "^4.7.0",

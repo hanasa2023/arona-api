@@ -1,8 +1,4 @@
 import { config } from '@/config'
-import { IBrowser } from '@/utils/borswer'
-import { Hono } from 'hono'
-import { raidServer } from '@/utils/constants'
-import { iFetch } from '@/utils/ifetch'
 import {
   DiffClearByTime,
   MemberChageData,
@@ -10,31 +6,35 @@ import {
   SeasonData,
   TrophyCutByTime,
 } from '@/types'
-import * as echarts from 'echarts/core'
-import { SVGRenderer } from 'echarts/renderers'
-import { LineChart } from 'echarts/charts'
-import {
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  GraphicComponent,
-  TimelineComponent,
-  LegendComponent,
-} from 'echarts/components'
+import { IBrowser } from '@/utils/borswer'
+import { raidServer } from '@/utils/constants'
+import { iFetch } from '@/utils/ifetch'
+import { IOSS } from '@/utils/oss'
+import { getJPRaidSeason } from '@/utils/tools'
+import { createHash } from 'crypto'
 import {
   ComposeOption,
+  GraphicComponentOption,
   GridComponentOption,
   LegendComponentOption,
-  GraphicComponentOption,
   LineSeriesOption,
   TimelineComponentOption,
   TitleComponentOption,
   TooltipComponentOption,
 } from 'echarts'
+import { LineChart } from 'echarts/charts'
+import {
+  GraphicComponent,
+  GridComponent,
+  LegendComponent,
+  TimelineComponent,
+  TitleComponent,
+  TooltipComponent,
+} from 'echarts/components'
+import * as echarts from 'echarts/core'
+import { SVGRenderer } from 'echarts/renderers'
+import { Hono } from 'hono'
 import sharp from 'sharp'
-import { IOSS } from '@/utils/oss'
-import { createHash } from 'crypto'
-import { getJPRaidSeason } from '@/utils/tools'
 
 type ECOption = ComposeOption<
   | LineSeriesOption
@@ -68,7 +68,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
     const imgPath = `/images/raid-line/${server}.png`
@@ -80,11 +80,11 @@ app
         console.info(url)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
@@ -92,6 +92,7 @@ app
           omitBackground: true,
           quality: 80,
         })
+        await page.close()
         await client.put(imgPath, screenshot)
       }
       const head = (await IOSS.getClient().head(imgPath)) as {
@@ -115,7 +116,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -127,18 +128,18 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
     try {
       const url = `http://localhost:${config.port}/raid/line/${server}/${season}`
       const browser = await IBrowser.launchBrowser()
       const page = await browser.newPage()
-      await page.setViewportSize({
+      await page.setViewport({
         width: 1920,
         height: 1080,
       })
-      await page.goto(url, { waitUntil: 'networkidle' })
+      await page.goto(url, { waitUntil: 'networkidle2' })
       const card = await page.$('#card')
       if (!card) throw new Error('Card element not found')
       const screenshot = await card.screenshot({
@@ -156,7 +157,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -168,7 +169,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -381,7 +382,7 @@ app
         })
       }
       const img = Buffer.from(
-        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer(),
+        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer()
       )
       return c.body(img.buffer, 200, {
         'Content-Type': 'image/png',
@@ -393,7 +394,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -405,7 +406,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
 
@@ -447,7 +448,7 @@ app
         })
 
         const deltaY = totalMember.value.map((v, i) =>
-          i === 0 ? 0 : v - totalMember.value[i - 1],
+          i === 0 ? 0 : v - totalMember.value[i - 1]
         )
 
         chart.setOption<ECOption>({
@@ -627,7 +628,7 @@ app
         })
       }
       const img = Buffer.from(
-        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer(),
+        await sharp(Buffer.from(chart.renderToSVGString())).png().toBuffer()
       )
       return c.body(img.buffer, 200, {
         'Content-Type': 'image/png',
@@ -639,7 +640,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -651,7 +652,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
     try {
@@ -659,7 +660,7 @@ app
         await iFetch(
           `${raidServer}/raids/calculate_time/${server}?bossId=${bossId}&time=${time}&hard=${hard}`,
           null,
-          'GET',
+          'GET'
         )
       )['data']
       return c.json({
@@ -676,7 +677,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -688,7 +689,7 @@ app
           code: 400,
           message: '暂不支持的服务器',
         },
-        { status: 400 },
+        { status: 400 }
       )
     }
     try {
@@ -696,7 +697,7 @@ app
         await iFetch(
           `${raidServer}/raids/calculate/${server}?bossId=${bossId}&point=${point}`,
           null,
-          'GET',
+          'GET'
         )
       )['data']
       return c.json({
@@ -711,7 +712,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -726,11 +727,11 @@ app
         console.info(url)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({

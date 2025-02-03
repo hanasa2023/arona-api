@@ -1,14 +1,12 @@
 import { Hono } from 'hono'
-import { handle } from 'hono/vercel'
 import { compress } from 'hono/compress'
-import student from 'routes/student'
-import strategy from 'routes/strategy'
+import { handle } from 'hono/vercel'
 import chapterMap from 'routes/chapter-map'
-import meme from 'routes/meme'
 import illusts from 'routes/illusts'
+import meme from 'routes/meme'
 import raid from 'routes/raid'
-
-export const runtime = 'nodejs'
+import strategy from 'routes/strategy'
+import student from 'routes/student'
 
 const app = new Hono().basePath('/api')
 app.use(compress())

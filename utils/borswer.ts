@@ -1,11 +1,25 @@
-import { chromium, Browser } from 'playwright'
+import Chromium from '@sparticuz/chromium'
+import puppeteer, { Browser } from 'puppeteer-core'
 
 export namespace IBrowser {
   let browser: Browser | null = null
   export async function launchBrowser() {
     if (!browser) {
-      browser = await chromium.launch()
+      Chromium.setGraphicsMode = false
+      browser = await puppeteer.launch({
+        args: Chromium.args,
+        defaultViewport: Chromium.defaultViewport,
+        executablePath: await Chromium.executablePath(),
+        headless: Chromium.headless === 'shell' ? 'shell' : true,
+      })
     }
     return browser
+  }
+
+  export async function closeBrowser() {
+    if (browser) {
+      await browser.close()
+      browser = null
+    }
   }
 }

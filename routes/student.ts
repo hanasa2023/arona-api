@@ -1,25 +1,25 @@
 import { config } from '@/config'
-import { Hono } from 'hono'
 import { IBrowser } from '@/utils/borswer'
 import { IOSS } from '@/utils/oss'
 import { createHash } from 'crypto'
-import * as echarts from 'echarts/core'
-import { SVGRenderer } from 'echarts/renderers'
+import {
+  CalendarComponentOption,
+  ComposeOption,
+  HeatmapSeriesOption,
+  TitleComponentOption,
+  TooltipComponentOption,
+  VisualMapComponentOption,
+} from 'echarts'
 import { HeatmapChart } from 'echarts/charts'
 import {
   CalendarComponent,
-  VisualMapComponent,
   TitleComponent,
   TooltipComponent,
+  VisualMapComponent,
 } from 'echarts/components'
-import {
-  ComposeOption,
-  CalendarComponentOption,
-  HeatmapSeriesOption,
-  TooltipComponentOption,
-  VisualMapComponentOption,
-  TitleComponentOption,
-} from 'echarts'
+import * as echarts from 'echarts/core'
+import { SVGRenderer } from 'echarts/renderers'
+import { Hono } from 'hono'
 import sharp from 'sharp'
 
 type ECOption = ComposeOption<
@@ -100,7 +100,7 @@ app
         message: 'Invalid id',
         data: {},
       },
-      500,
+      500
     )
   })
   .get('/info/:id', async (c) => {
@@ -114,16 +114,17 @@ app
         console.info(url)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#info-card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
           type: 'png',
         })
+        await page.close()
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
@@ -148,7 +149,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -160,7 +161,7 @@ app
           code: 500,
           message: 'Invalid level',
         },
-        500,
+        500
       )
     }
     const imgPath = `/images/student-info/${id}_${level}.png`
@@ -173,16 +174,17 @@ app
         }`
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#info-card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
           type: 'png',
         })
+        await page.close()
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
@@ -207,7 +209,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -221,16 +223,17 @@ app
         const url = `http://localhost:${config.port}/student/info/skills/${id}`
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#skill-card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
           type: 'png',
         })
+        await page.close()
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
       }
@@ -255,7 +258,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -356,7 +359,7 @@ app
           code: 500,
           message: 'Internal server error',
         },
-        500,
+        500
       )
     }
   })
@@ -371,17 +374,18 @@ app
         console.info(`更新${s.Id}(${index + 1}/${studentsData.length})`)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#info-card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
           type: 'png',
           omitBackground: true,
         })
+        await page.close()
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
         info.push(`更新${s.Name}信息成功`)
@@ -398,17 +402,18 @@ app
         console.info(`更新${s.Id}(${index + 1}/${studentsData.length})`)
         const browser = await IBrowser.launchBrowser()
         const page = await browser.newPage()
-        await page.setViewportSize({
+        await page.setViewport({
           width: 1920,
           height: 1080,
         })
-        await page.goto(url, { waitUntil: 'networkidle' })
+        await page.goto(url, { waitUntil: 'networkidle2' })
         const card = await page.$('#skill-card')
         if (!card) throw new Error('Card element not found')
         const screenshot = await card.screenshot({
           type: 'png',
           omitBackground: true,
         })
+        await page.close()
         const data = Buffer.from(screenshot)
         await client.put(imgPath, data)
         info.push(`更新${s.Name}技能成功`)
